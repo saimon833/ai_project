@@ -30,12 +30,12 @@ def __genData():
             norm_data[column] = (norm_data[column] - norm_data[column].min()) / (norm_data[column].max() - norm_data[column].min())
     
     norm_data.to_csv('wine.csv',header=False, index=False)
-def dataImport(name):
+def __dataImport(name):
     with open(name, 'r', encoding='utf-8') as file:
         return [line for line in reader(file, delimiter=',')]
 
 def loadData():
-    data = dataImport('wine.csv')
+    data = __dataImport('wine.csv')
     data = np.array(data)
     data=data.astype(float)
     mask = np.random.rand(len(data)) <= 0.8
@@ -64,4 +64,4 @@ def loadData():
     return (trainData, testData)
 
 if __name__ == '__main__':
-    genData()
+    __genData()
