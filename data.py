@@ -27,7 +27,8 @@ def min_max_norm(column):
 norm_data = data_list.copy()
 # apply normalization techniques
 for column in norm_data.columns:
-    norm_data[column] = (norm_data[column] - norm_data[column].min()) / (norm_data[column].max() - norm_data[column].min())
+    if column !=0:
+        norm_data[column] = (norm_data[column] - norm_data[column].min()) / (norm_data[column].max() - norm_data[column].min())
 
 #print(data_list.dtypes)
 #print(data_list)

@@ -10,16 +10,21 @@ def dataImport(name):
 # Import data.tsv to dataList
 dataList = dataImport('wine.csv')
 
-# Create numpy array from dataList
-dataList = np.array(dataList)
+def loadData(data):
+    data = np.array(data)
+    data=data.astype(float)
+    mask = np.random.rand(len(data)) <= 0.8
+    trainData = data[mask]
+    testData = data[~mask]
+    testIn, testOut = testData[:,1:], testData[:,:1]
+    trainIn, trainOut = trainData[:,1:], trainData[:,:1]
 
-inputData, outputData = dataList[:,1:], dataList[:,:1]
-finalData = [(np.array(inputData[i], ndmin=2).T, np.array(outputData[i], ndmin=2).T) for i in range(0, len(outputData))]
-print(finalData[0][0][0])
-
-
+    # Combining inputData and outputData in a single tuple
+    trainData = [(np.array(trainIn[i], ndmin=2).T, np.array(trainOut[i], ndmin=2).T) for i in range(0, len(trainOut))]
+    testData = [(np.array(testIn[i], ndmin=2).T, np.array(testOut[i], ndmin=2).T) for i in range(0, len(testOut))]
+    return (trainData, testData)
 # [attributes, hidden neurons, output]
-net = network.Network([13, 3, 1])
-
+net = network.Network([13, 10, 5, 3])
+trainData, testData = loadData(dataList)
 # (training_data, epochs, batch_size, eta, test_data)
-net.SGD(finalData, 20, len(finalData), 0.9)
+net.SGD(trainData, 20000, 10, 0.4, testData)
