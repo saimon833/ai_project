@@ -27,6 +27,10 @@ class Network(object):
             a = sigmoid(np.dot(w, a)+b)
         return a
 
+    def mse(self,_test_data):
+        error=[pow(np.linalg.norm(self.feedforward(x)-y),2) for (x,y) in _test_data]
+        return 1/2*len(_test_data)*sum(error)    
+ 
     def SGD(self, training_data, epochs, mini_batch_size, eta,
             test_data=None):
         """Train the neural network using mini-batch stochastic
@@ -47,8 +51,10 @@ class Network(object):
             for mini_batch in mini_batches:
                 self.update_mini_batch(mini_batch, eta)
             if test_data:
+                old_error=self.mse(test_data)
                 test=self.evaluate(test_data)
                 test2=test/n_test*100
+                print('Error: ',old_error)
                 print("Epoch {0}: {1} / {2}, {3:.2f}%".format(
                     j, test, n_test, test2))
             else:
