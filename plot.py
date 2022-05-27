@@ -25,7 +25,7 @@ surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm,
                        linewidth=0, antialiased=False)
 
 fig.colorbar(surf, shrink=0.5, aspect=5)
-ax.invert_yaxis()
+#ax.invert_zaxis()
 ax.set_xlabel("S2")
 ax.set_ylabel("S1")
 ax.set_zlabel("% nauczenia sieci")
