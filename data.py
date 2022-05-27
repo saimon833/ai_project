@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from csv import reader
 from tabulate import tabulate
+from sklearn.model_selection import train_test_split
 
 def __genData():
     par_names = ['Class',
@@ -38,9 +39,7 @@ def loadData():
     data = __dataImport('wine.csv')
     data = np.array(data)
     data=data.astype(float)
-    mask = np.random.rand(len(data)) <= 0.8
-    trainData = data[mask]
-    testData = data[~mask]
+    trainData, testData = train_test_split(data, test_size=0.2, random_state=25)
     testIn, testOut = testData[:,1:], testData[:,:1]
     trainIn, trainOut = trainData[:,1:], trainData[:,:1]
     testOutNew=list()

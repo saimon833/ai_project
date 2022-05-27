@@ -20,6 +20,7 @@ class Network(object):
         self.biases = [np.random.randn(y, 1) for y in sizes[1:]]
         self.weights = [np.random.randn(y, x)
                         for x, y in zip(sizes[:-1], sizes[1:])]
+        self.max_perf_inc = 1.04
 
     def feedforward(self, a):
         """Return the output of the network if ``a`` is input."""
@@ -27,12 +28,15 @@ class Network(object):
             a = sigmoid(np.dot(w, a)+b)
         return a
 
+    def sse(self,_test_data):
+        error=[pow(np.linalg.norm(self.feedforward(x)-y),2) for (x,y) in _test_data]
+        return 0.5*sum(error)    
     def mse(self,_test_data):
         error=[pow(np.linalg.norm(self.feedforward(x)-y),2) for (x,y) in _test_data]
-        return 1/2*len(_test_data)*sum(error)    
+        return 1/2*len(_test_data)*sum(error)
  
     def SGD(self, training_data, epochs, mini_batch_size, eta,
-            test_data=None):
+            test_data,error_goal,inc,dec):
         """Train the neural network using mini-batch stochastic
         gradient descent.  The ``training_data`` is a list of tuples
         ``(x, y)`` representing the training inputs and the desired
@@ -43,23 +47,43 @@ class Network(object):
         tracking progress, but slows things down substantially."""
         if test_data: n_test = len(test_data)
         n = len(training_data)
+        max_perc = 0
+        best_epoch = 0
         for j in range(epochs):
             random.shuffle(training_data)
-            mini_batches = [
-                training_data[k:k+mini_batch_size]
-                for k in range(0, n, mini_batch_size)]
+            mini_batches = [training_data[k:k+mini_batch_size]
+                    for k in range(0, n, mini_batch_size)]
+            old_error=self.sse(test_data)
+            backup_weights = self.weights.copy()
+            backup_biases = self.biases.copy()
             for mini_batch in mini_batches:
                 self.update_mini_batch(mini_batch, eta)
-            if test_data:
-                old_error=self.mse(test_data)
+            new_error=self.sse(test_data)
+            if new_error < error_goal:
                 test=self.evaluate(test_data)
                 test2=test/n_test*100
-                print('Error: ',old_error)
-                print("Epoch {0}: {1} / {2}, {3:.2f}%".format(
-                    j, test, n_test, test2))
-            else:
-                print("Epoch {0} complete".format(j))
-
+#                print("Epoch {0}: {1} / {2}, {3:.2f}%".format(j, test, n_test, test2))
+#                print('eta: ',eta)
+#                print('Error: ',new_error)
+#                break
+                print("Epoch {0}: {1:.2f}%".format(j+1, test2))
+                return [j+1, test2]
+            elif new_error < old_error:
+                eta *= inc
+            elif new_error > old_error * self.max_perf_inc:
+                self.weights = backup_weights
+                self.biases = backup_biases
+                eta *= dec
+            test=self.evaluate(test_data)
+            test2=test/n_test*100
+            if test2>max_perc:
+                max_perc=test2
+                best_epoch = j+1
+            if test2==100 or j==epochs-1:
+#                print("Epoch {0}: {1:.2f}%".format(best_epoch, max_perc))
+                print("Epoch {0}: {1:.2f}%".format(j+1, test2))
+                return [j+1, test2]
+#                return [best_epoch, max_perc]
     def update_mini_batch(self, mini_batch, eta):
         """Update the network's weights and biases by applying
         gradient descent using backpropagation to a single mini batch.
