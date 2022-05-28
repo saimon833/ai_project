@@ -79,7 +79,7 @@ class Network(object):
             if test2>max_perc:
                 max_perc=test2
                 best_epoch = j+1
-            if test2==100 or j==epochs-1:
+            if j==epochs-1:
 #                print("Epoch {0}: {1:.2f}%".format(best_epoch, max_perc))
                 print("Epoch {0}: {1:.2f}%".format(j+1, test2))
                 return [j+1, test2]
@@ -95,9 +95,11 @@ class Network(object):
             delta_nabla_b, delta_nabla_w = self.backprop(x, y)
             nabla_b = [nb+dnb for nb, dnb in zip(nabla_b, delta_nabla_b)]
             nabla_w = [nw+dnw for nw, dnw in zip(nabla_w, delta_nabla_w)]
-        self.weights = [w-(eta/len(mini_batch))*nw
+#        self.weights = [w-(eta/len(mini_batch))*nw
+        self.weights = [w-(eta/2)*nw
                         for w, nw in zip(self.weights, nabla_w)]
-        self.biases = [b-(eta/len(mini_batch))*nb
+#        self.biases = [b-(eta/len(mini_batch))*nb
+        self.biases = [b-(eta/2)*nb
                        for b, nb in zip(self.biases, nabla_b)]
 
     def backprop(self, x, y):
