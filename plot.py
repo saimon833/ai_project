@@ -5,7 +5,7 @@ import numpy as np
 from data import __dataImport as dataImport
 import pandas as pd
 
-data = dataImport('results_1.csv')
+data = dataImport('S1_S2.csv')
 
 data=pd.DataFrame(data)
 fig, ax = plt.subplots(subplot_kw={"projection": "3d"})

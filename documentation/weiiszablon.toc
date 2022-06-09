@@ -1,0 +1,20 @@
+\babel@toc {polish}{}\relax 
+\contentsline {section}{\numberline {1}Opis problemu}{\footnotesize 5}{section.1}%
+\contentsline {section}{\numberline {2}Specyfikacja danych}{\footnotesize 6}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Normalizacja danych}{\footnotesize 7}{subsection.2.1}%
+\contentsline {section}{\numberline {3}Zagadnienia teoretyczne}{\footnotesize 8}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Model sztucznego neuronu}{\footnotesize 8}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Sieć jednokierunkowa wielowarstwowa}{\footnotesize 10}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Uczenie sieci algorytmem wstecznej propagacji błędu}{\footnotesize 11}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Adaptacyjny współczynik uczenia}{\footnotesize 13}{subsection.3.4}%
+\contentsline {section}{\numberline {4}Algorytm}{\footnotesize 14}{section.4}%
+\contentsline {section}{\numberline {5}Eksperymenty}{\footnotesize 18}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Eksperyment 1 - badanie wpływu S1 i S2 na szybkość uczenia sieci}{\footnotesize 18}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {5.1.1}Badania dla 1000 epok}{\footnotesize 19}{subsubsection.5.1.1}%
+\contentsline {subsubsection}{\numberline {5.1.2}Badania dla 2000 epok}{\footnotesize 20}{subsubsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.2}Eksperyment 2 - badanie parametrów $lr_{inc}$ oraz $lr_{dec}$}{\footnotesize 21}{subsection.5.2}%
+\contentsline {subsubsection}{\numberline {5.2.1}Badania dla $S1=17$, $S2=7$}{\footnotesize 22}{subsubsection.5.2.1}%
+\contentsline {subsubsection}{\numberline {5.2.2}Badania dla $S1=17$, $S2=15$}{\footnotesize 23}{subsubsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.3}Eksperyment 3 - badanie parametru er}{\footnotesize 24}{subsection.5.3}%
+\contentsline {section}{\numberline {6}Podsumowanie i wnioski końcowe}{\footnotesize 25}{section.6}%
+\contentsline {section}{Literatura}{\footnotesize 26}{section.6}%
