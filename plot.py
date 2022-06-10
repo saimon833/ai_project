@@ -5,7 +5,7 @@ import numpy as np
 from data import __dataImport as dataImport
 import pandas as pd
 
-data = dataImport('S1_S2.csv')
+data = dataImport('S1_S2_1.csv')
 
 data=pd.DataFrame(data)
 fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
@@ -21,8 +21,8 @@ for i in range(25):
     Z.append(tmp)
 #print(Z)
 Z=np.array(Z)
-surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm,
-                       linewidth=0, antialiased=False)
+surf = ax.plot_surface(X, Y, Z, cmap=cm.plasma,
+                       linewidth=0, antialiased=True)
 
 fig.colorbar(surf, shrink=0.5, aspect=5)
 ax.invert_zaxis()

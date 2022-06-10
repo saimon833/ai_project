@@ -16,4 +16,4 @@ for s1 in s1_vec:
         results.append(result)
 
 results=pd.DataFrame(results)
-results.to_csv('S1_S2.csv',index=None,header=None)
+results.to_csv('S1_S2_1.csv',index=None,header=None)
