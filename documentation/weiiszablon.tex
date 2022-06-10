@@ -6,7 +6,7 @@
 \type{Projekt}
 \subject{Sztuczna Inteligencja}
 \title{Temat: Zrealizować sieć neuronową uczoną algorytmem wstecznej propagacji błędu z przyśpieszeniem metodą adaptacyjnego współczynnika uczenia (trainbpa)
-uczącą się rozpoznawanie rodzaju wina}
+uczącą się rozpoznawania rodzaju wina}
 \author{Szymon Kmieć}
 \group{2EF-DI,	P2}
 
@@ -29,10 +29,10 @@ Głównym celem projektu było zaprojektowanie oraz implementacja sieci neuronow
 
 %Głównym celem projektu było stworzenie algorytmu oraz nauczenie sieci neuronowej diagnozowania chorób na podstawie badań próbek tkanek z piersi. Została w tym celu stworzona sieć neuronowa uczona algorytmem wstecznej propagacji błędu. Jako metodę przyśpieszenia uczenia zastosowano adaptacyjny współczynnik uczenia. W ramach projektu zbadano wpływ parametrów na szybkość uczenia sieci:
 \begin{itemize}
-	\item S1 - liczba neuronów w pierwszej warstwie sieci
+\item S1 - liczba neuronów w pierwszej warstwie sieci
 \item S2 - liczba neuronów w drugiej warstwie sieci
 \item lr - współczynnik uczenia sieci
-\item er - współczynnik maksymalnego dopuszczalnego przyrostu błędu, oznaczany również jako MAX\_PERF\_INC
+\item er - współczynnik maksymalnego dopuszczalnego przyrostu błędu
 \item lr\textsubscript{dec} - modyfikator współczynnika uczenia w przypadku przekroczeniu maksymalnego dopuszczalnego przyrostu błędu
 \item lr\textsubscript{inc} - modyfikator współczynnika uczenia w przypadku spadku błędu
 \end{itemize}
@@ -66,7 +66,7 @@ atrybut określa rodzaj wina - opisany liczbą całkowitą {1, 2, 3}, natomiast 
 \clearpage
 
 \subsection{Normalizacja danych}
-W celu usprawnienia procesu uczenia dane wejściowe zostaly poddane normalizacji metodą \textit{min - max} określoną wzorem \cite{norm}:
+W celu usprawnienia procesu uczenia dane wejściowe zostały poddane normalizacji metodą \textit{min - max} określoną wzorem \cite{norm}:
 \begin{equation}
 f(x) = \frac{x - \min{(x)}}{\max{(x)} - \min{(x)}}
 \end{equation}
@@ -88,17 +88,17 @@ Numery klas, stanowiące dane wyjściowe, zostały natomiast przekształcone prz
 \clearpage
 \section{Zagadnienia teoretyczne}
 \subsection{Model sztucznego neuronu}
-Podstawowym elementem z którego zbudowane są sieci neuronowe jest pojedynczy neuron. Neuron jest jednostką która przetwarza informacje wejściowe, oraz zwraca wynik przetwarzania w postaci wartości wyjściowej. 
+Sieć neuronową  tworzą pojedyncze neurony, które ułożone są w poszczególnych warstwach sieci. Neuron jest jednostką przetwarzającą informacje otrzymane na wejciu, oraz zwraca wynik przetwarzania w postaci wartości wyjściowej. 
 
 
 Początkowo neuron miał co najmniej jedno wejście binarne i tylko jedno binarne wyjście. Wyjście było aktywowane, gdy osiągnięta została określona liczba wejść. W 1957 roku uczony Frank Rosenblatt zmodyfikował prosty sztuczny neuron binarny, tworząc w ten sposób perceptron, czyli jedną z najprostszych sieci neuronowych. Posiada on następującą charakterystykę \cite{mamczur}:
 \begin{itemize}
-\item Na wejściu i wyjściu zamiast wartości binarnych mogą być dowolne liczby
-\item Połączenia węzłów mają nadaną wagę
-\item Wartość wyjściowa w węźle składa się z dwóch części: sumy wartości z warstw poprzednich pomnożonej przez wagi oraz nałożonej na tą sumę funkcji aktywacji.
+\item Na wejściu i wyjściu mogą być dowolne liczby, nie tylko wartości binarne 
+\item Połączenia węzłów mają określoną wagę
+\item Wartość wyjściowa węzła składa się z dwóch części: sumy wartości z warstw poprzednich pomnożonej przez wagi oraz nałożonej na tą sumę funkcji aktywacji.
 \end{itemize}
 
-Na rysunku \ref{neuron} sygnał przechodzi z lewej do prawej.
+Model neuronu został przedstawiony na rysunku \ref{neuron}.
 
 \begin{figure}[ht]
 \label{neuron}
@@ -126,15 +126,9 @@ gdzie:
 \item $w$ - wektor wag
 \item $b$  - bias
 \end{itemize}
-Ze względu na funkcję aktywacji wyróżnia się różne typy neuronów. Najczęściej stosowanymi funkcjami aktywacji neuronu są funkcje liniowe (\ref{lin}) oraz sigmoidalne (\ref{siguni} oraz \ref{sigbi}).
+Typy neuronów dzieli się ze względu na ich fukncję aktywacji. Najczęściej stosowanymi funkcjami aktywacji neuronu są funkcje sigmoidalne (\ref{siguni} oraz \ref{sigbi}) oraz liniowe (\ref{lin}).
 
-
-Funkcja liniowa ma postać:
-\begin{equation}\label{lin}
-f(x) = a \cdot x + b
-\end{equation}
-
-Funkcja sigmoidalna unipolarna:
+Funkcja sigmoidalna unipolarna ma postać:
 \begin{equation}\label{siguni}
 f(x) = \frac{1}{1 + e^{-\beta x}}
 \end{equation}
@@ -144,12 +138,17 @@ Funkcja sigmoidalna bipolarna:
 f(x) = \frac{2}{1 + e^{-\beta x}} -1
 \end{equation}
 
-gdzie parametr $\beta$ określony jest z reguły w przedziale $[0, 1]$.
+Funkcja liniowa:
+\begin{equation}\label{lin}
+f(x) = a \cdot x + b
+\end{equation}
+
+gdzie parametr $\beta$ najczęściej jest z przedziału $[0, 1]$.
 \clearpage
 
 \subsection{Sieć jednokierunkowa wielowarstwowa}
 
-Sztuczną sieć neuronowa uzyskuje się łącząc ze sobą warstwy neuronów. Przykładowy model sieci wielowarstwowej pokazano na rysunku \ref{wielo}.
+Sztuczną sieć neuronowa uzyskuje się łącząc ze sobą warstwy neuronów. Neurony nie łączą się ze sobą w obrębie tej samej warstwy lub z pominięciem warstw między nimi. Przykładowy model sieci wielowarstwowej pokazano na rysunku \ref{wielo}.
 
 \begin{figure}[h]
 \label{wielo}
@@ -161,11 +160,13 @@ Sztuczną sieć neuronowa uzyskuje się łącząc ze sobą warstwy neuronów. Pr
 Sieć taka ma zwykle strukturę obejmującą: 
 \begin{itemize}
 \item warstwę wejściową
-\item co najmniej jedną warstwę ukrytą (złożoną z neuronów sigmoidalnych)
+\item jedną lub więcej warstw ukrytych (złożonych z neuronów sigmoidalnych)
 \item warstwę wyjściową (złożoną z neuronów sigmoidalnych lub liniowych)
 \end{itemize}
 
-Każda warstwa posiada:
+Charakterystyczną cechą dla warstwy wejściowej jest to, że nie bierze ona udziału w procesie uczenia, jej zadaniem zadaniem jest przekazanie wektora wejściowego sieci do warstw ukrytych, lub bezpośrednio do warstwy wyjściowej (w przypadku modelu sieci jednowarstwowej). Ilość warstw w sieci oraz ilość neuronów w warstwie są ściśle uzależnione od specyfiki problemu przed jakim zosataje postawiona sieć neuronowa.
+\newpage
+Każda warstwa sieci posiada:
 \begin{itemize}
 \item Macierz wag neuronów - $\textbf{w}$
 \item Wektor przesunięć - $\textbf{b}$
@@ -188,17 +189,18 @@ y^{(3)} = f^{(3)}\left( w^{(3)} f^{(2)} \left( w^{(2)}f^{(1)} \left( w^{(1)}x + 
 \\
 
 
-\subsection{Uczenie sieci algorytmem wstecznej propagacji błędu}
+\subsection{Algorytm wstecznej propagacji błędu}
 
-Algorytm wstecznej propagacji błędu dominuje wśród metod uczenia sieci jednokierunkowych. Opiera się on na koncepcji poprawiania na każdym kroku procesu uczenia wartości korekty wag na podstawie oceny błędu popełnionego przez każdy neuron podczas uczenia sieci \cite{leksykon}. 
+Algorytm wstecznej propagacji błędu, nazywany również algorytmem największego spadku gradientu jest algorytmem dominującym wśród metod uczenia sieci jednokierunkowych. Działanie algorytmu sprowadza się do wyznaczenia gradientu funkcji celu dla każdego z neuronów sieci. 
 
-Do zastosowania algorytmu wstecznej propagacji błędu, wymagane jest, aby funkcje aktywacji neuronów były różniczkowalne, co pozwala na wyznaczenie pochodnej błędu po danych wyjściowych. Dla każdej pary $(x, \hat{y})$ sieć popełnia błąd, który można zdefiniować następująco:
+Aby możliwe było zastosowanie algorytmu wstecznej propagacji błędu, wymagane jest, aby funkcje aktywacji neuronów były różniczkowalne. Pozwala to na wyznaczenie pochodnej błędu po danych wyjściowych. Dla każdej pary $(x, \hat{y})$ sieć popełnia błąd, który można zdefiniować następująco:
 
 \begin{equation}
 e = y - \hat{y}
 \end{equation}
 
 Celem uczenia sieci jest zminimalizowanie sumarycznego błędu kwadratowego, wyrażonego jako suma kwadratów błędów dla K neuronów w warstwie wyjściowej.
+
 \begin{equation}\label{sredniokwad}
 E = \frac{1}{2} \sum_{j=1}^{K} e_{j}^2
 \end{equation}
@@ -214,22 +216,22 @@ E =& \frac{1}{2} \sum_{i_{3}=1}^{K_{3}} e_{i_{3}}^2 = \frac{1}{2} \sum_{i_{3}=1}
 \end{aligned}
 \end{equation}\\
 
-Zminimalizowanie błędu \ref{sredniokwad} osiąga się poprzez zmianę biasów neuronów oraz wag ich połączeń. Kolejna wartość wagi połączenia jest wyznaczana na podstawie pochodnej cząstkowej błędu po wartości tejże wagi w obecnym cyklu nauczania. W podobny sposób wyznaczana jest również nowa wartość biasu dla każdego z neuronów. Otrzymaną pochodną mnoży się przez współczynnik uczenia $\eta$, który również może zmieniać się podczas procesu uczenia sieci. Wagę dla $k+1$ kroku otrzymać można w następujący sposób:\\
-\begin{equation}
-w_{ij}(k+1) = w_{ij}(k) - \eta \frac{\partial E}{\partial w_{ij}(k)}
-\end{equation}\\
-
-Zatem zmiany wag obliczane są ze wzoru:\\
+Zminimalizowanie błędu \ref{sredniokwad} osiąga się poprzez zmianę biasów neuronów oraz wag ich połączeń. Kolejna wartość wagi połączenia jest wyznaczana na podstawie pochodnej cząstkowej błędu po wartości tejże wagi w obecnym cyklu nauczania. W podobny sposób wyznaczana jest również nowa wartość biasu dla każdego z neuronów. Otrzymaną pochodną mnoży się przez współczynnik uczenia $\eta$, który również może zmieniać się podczas procesu uczenia sieci. Zmiany poszczególnych wag obliczane są ze wzoru:\\
 \begin{equation}
 \Delta w_{ij} = - \eta \frac{\partial E}{\partial w_{ij}}
+\end{equation}\\
+
+Zatem wagę dla $k+1$ kroku otrzymać można w następujący sposób:\\
+\begin{equation}
+w_{ij}(k+1) = w_{ij}(k) - \eta \frac{\partial E}{\partial w_{ij}(k)}
 \end{equation}\\
 
 Obliczanie wag neuronów rozpoczyna się od warstwy wyjściowej:\\
 \begin{equation}
 \frac{\partial E}{\partial w_{i_{3}i_{2}}^{(3)}} = \frac{\partial E}{\partial f^{(3)}} \frac{\partial f^{(3)}\left( z_{i_{3}}^{(3)} \right)}{\partial z_{i_{3}}^{(3)}} \frac{\partial z_{i_{3}}^{(3)}}{\partial w_{i_{3}i_{2}}^{(3)}} = \left( y_{i_{3}} - \hat{y}_{i_{3}} \right) \frac{\partial f^{(3)}\left( z_{i_{3}}^{(3)} \right)}{\partial z_{i_{3}}^{(3)}} y_{i_{2}}^{(2)}
-\end{equation}\\
-\newpage
-Podobnie można obliczyć elementy gradientu względem wag warstwy ukrytej\\
+\end{equation}
+
+Podobnie można obliczyć elementy gradientu względem wag warstwy ukrytej:\\
 \begin{equation}
 \begin{aligned}
 &\frac{\partial E}{\partial w_{i_{2}i_{1}}^{(2)}} = \frac{\partial E}{\partial f^{(3)}} \frac{\partial f^{(3)}\left( z_{i_{3}}^{(3)} \right)}{\partial z_{i_{3}}^{(3)}} \frac{\partial z_{i_{3}}^{(3)}}{\partial f^{(2)}} \frac{\partial f^{(2)}\left( z_{i_{2}}^{(2)} \right)}{\partial z_{i_{2}}^{(2)}} \frac{\partial z_{i_{2}}^{(2)}}{\partial w_{i_{2}i_{1}}^{(2)}}  =\\
@@ -237,7 +239,7 @@ Podobnie można obliczyć elementy gradientu względem wag warstwy ukrytej\\
 \end{aligned}
 \end{equation}\\
 
-Oraz dla warstwy wejściowej\\
+Oraz dla warstwy wejściowej:\\
 \begin{equation}
 \begin{aligned}
 &\frac{\partial E}{\partial w_{i_{1}j}^{(1)}} = \frac{\partial E}{\partial f^{(3)}} \frac{\partial f^{(3)}\left( z_{i_{3}}^{(3)} \right)}{\partial z_{i_{3}}^{(3)}} \frac{\partial z_{i_{3}}^{(3)}}{\partial f^{(2)}} \frac{\partial f^{(2)}\left( z_{i_{2}}^{(2)} \right)}{\partial z_{i_{2}}^{(2)}} \frac{\partial z_{i_{2}}^{(2)}}{\partial f^{(1)}}  \frac{\partial f^{(1)}\left( z_{i_{1}}^{(1)} \right)}{\partial z_{i_{1}}^{(1)}} \frac{\partial z_{i_{1}}^{(1)}}{\partial w_{i_{1}j}^{(1)}}  =\\
@@ -266,193 +268,125 @@ gdzie:
 \end{itemize}
 \clearpage
 
-\section{Algorytm}
+\section{Implementacja sieci neuronowej}
 
-Na potrzeby realizacji projektu zaimplementowano w języku Python algorytm pozwalający na uczenie dowolnej sieci neuronowej algorytmem wstecznej propagacji błędu, wraz z przyspieszeniem metodą adaptacyjnego współczynnika uczenia. 
+Na potrzeby realizacji projektu zaimplementowano w języku Python program pozwalający na uczenie sieci neuronowej o dowolnej liczbie warstw algorytmem wstecznej propagacji błędu, wraz z przyspieszeniem metodą adaptacyjnego współczynnika uczenia na podstawie książki Michaela Nielsena \cite{nielsen}.  
 
-Python jest z natury językiem wolnym. Dzieje się tak, ponieważ należy do grupy języków interpretowanych. Z racji tego, implementacja sieci w samym Pythonie byłaby nieefektywna. W związku z tym do obliczeń wykorzystano moduł \textit{numpy}. Biblioteka ta została napisana i skompilowana w języku C, dlatego wykonywanie obliczeń będzie znacznie przyspieszone. Do kroswalidacji użyto modułu \textit{sklearn}.
+Do implementacji wykorzystano język programowania Python 3.10.5, który jest językiem z natury wolnym, dlatego do obliczeń wykorzystano moduł \textit{numpy}. Moduł ten napisany jest w C, dzięki czemu obliczenia na macierzach będą wykonywane o wiele szybciej niż w zwykłym pythonie. Do kroswalidacji wykorzystano moduł \textit{sklearn}.
 
-Algorytm oferuje możliwość wyboru techniki aktualizacji wag:
+%Python jest z natury językiem wolnym. Dzieje się tak, ponieważ należy do grupy języków interpretowanych. Z racji tego, implementacja sieci w samym Pythonie byłaby nieefektywna. W związku z tym do obliczeń wykorzystano moduł \textit{numpy}. Biblioteka ta została napisana i skompilowana w języku C, dlatego wykonywanie obliczeń będzie znacznie przyspieszone. Do kroswalidacji użyto modułu \textit{sklearn}.
+
+Program oferuje możliwość wyboru techniki aktualizacji wag:
 \begin{itemize}
 \item Wsadowa -  parametry neuronów aktualizowane są dopiero po wczytaniu do sieci całego zestawu danych uczących
 \item Mini-batch -  Zbiór danych podzielony jest na podzbiory, aktualizacja parametrów sieci następuje po zaprezentowaniu całego podzbioru
 
 \end{itemize}
 
-\begin{lstlisting}[language=Python,caption=Algorytm uczenia sieci,label={Kod2}]
+\begin{lstlisting}[language=Python,caption=Implementacja sieci,label={Kod2}]
 import random
 import numpy as np
 
-
 class Network(object):
-    """konstruktor obiektu sieci - przyjmuje jako parametr liste 
-    zawierajaca liczbe wejsc, liczbe neuronow w 
-    warstwach S1, S2, oraz liczbe neuronow na wyjsciu"""
-    def __init__(self, sizes, err=1.04):
-        #do ilosci warstw sieci przypisz dlugosc wektora "sizes"
+
+    def __init__(self, sizes):
+        np.random.seed(0x2f6eab9)
         self.num_layers = len(sizes)
-        #przypisanie wektora do zmiennej w obiekcie
         self.sizes = sizes
-        #ustawia parametry generatora pseudolosowego
-        #aby kolejnym sieciom byly przypisywane takie same wagi 
-        #i biasy
-        np.random.seed(1)
-        """inicjalizacja biasow i wag przy pomocy rozkladu 
-        gaussa N(0,1) dla wszystkich warstw poza zerowa 
-        (warstwa wejsciowa to nie neurony)"""
         self.biases = [np.random.randn(y, 1) for y in sizes[1:]]
         self.weights = [np.random.randn(y, x)
                         for x, y in zip(sizes[:-1], sizes[1:])]
-        #maksymalny przyrost bledu
-        self.max_perf_inc = err
+        self.max_perf_inc = 1.04
 
-    def feedforward(self, a):
-        #zwraca wynik sieci neuronowej dla zestawu danych "a"
+    def __feedforward(self, a):
         for b, w in zip(self.biases, self.weights):
-            a = sigmoid(np.dot(w, a)+b)
+            a = self.__sigmoid(np.dot(w, a)+b)
         return a
-    
-    #liczenie bledu sredniokwadratowego
-    def sse(self,_test_data):
-        error=[pow(np.linalg.norm(self.feedforward(x)-y),2) for (x,y) in _test_data]
-        return 0.5*sum(error)    
 
-    
-    def SGD(self, training_data, epochs, mini_batch_size, eta,
-            test_data,error_goal,inc,dec):
-        """Funkcja odpowiedzialna za proces uczenia.
-        Jako parametry przyjmuje: liste krotek (x, y)
-        gdzie x - wektor danych uczacych, 
-        y - oczekiwane wyjscie sieci;
-        maksymalna liczbe epok; rozmiar podzbioru danych;
-        poczatkowy wspolczynnik uczenia; liste krotek (x, y)
-        zawierajacych dane testowe; docelowy koszt;
-        wspolczynnik przyrostu i spadku wspolczynnika uczenia"""
-        #przypisanie do zmiennej ilosci testow
+    def __sse(self,_test_data):
+        error=[pow(np.linalg.norm(self.__feedforward(x)-y),2) for (x,y) in _test_data]
+        return 0.5*sum(error)    
+ 
+    def train(self, training_data, test_data,epochs=1000,eta=0.1,error_goal=0.25,inc=1.05,dec=0.7,mini_batch_size=0,err_inc=1.04):
+        self.max_perf_inc=err_inc
+        if mini_batch_size==0: mini_batch_size=len(training_data)
         n_test = len(test_data)
         n = len(training_data)
-        #petla dla kazdej epoki
         for j in range(epochs):
-            #przelosowanie zbioru uczacego
             random.shuffle(training_data)
-            #generowanie podzbiorow
             mini_batches = [training_data[k:k+mini_batch_size]
                     for k in range(0, n, mini_batch_size)]
-            #obliczanie bledu dla starych parametrow
-            old_error=self.sse(test_data)
-            #kopia zapasowa wektorow z biasami i wagami
+            old_error=self.__sse(test_data)
             backup_weights = self.weights.copy()
             backup_biases = self.biases.copy()
-            #aktualizowanie kazdego z podzbiorow
             for mini_batch in mini_batches:
-                self.update_mini_batch(mini_batch, eta)
-            #obliczenie bledu dla nowych wartosci bias i wag
-            new_error=self.sse(test_data)
-            #jezeli nowy blad < pozadany koszt
+                self.__update_mini_batch(mini_batch, eta)
+            new_error=self.__sse(test_data)
             if new_error < error_goal:
-                #obliczanie sprawnosci sieci
-                #evaluate - liczba poprawnych dopasowan
-                test=self.evaluate(test_data)
-                #zamiana na wartosc procentowa
+                test=self.__evaluate(test_data)
                 test2=test/n_test*100
-                print("Epoch {0}: , {1:.2f}%".format(j+1,  test2))             
+                print("Epoch {0}: {1:.2f}\%".format(j+1, test2))
                 return [j+1, test2]
-            #jezeli nowy blad < starego
             elif new_error < old_error:
-                #zwiekszenie wspolczynnika uczenia 
                 eta *= inc
-            #jezeli nowy blad > stary * max przyrost bledu
             elif new_error > old_error * self.max_perf_inc:
-                #przywrocenie starych biasow i wag
                 self.weights = backup_weights
                 self.biases = backup_biases
-                #zmniejszenie wspolczynnika uczenia
                 eta *= dec
-            #jezeli uplynela max liczba epok 
             if j==epochs-1:
-                test=self.evaluate(test_data)
+                test=self.__evaluate(test_data)
                 test2=test/n_test*100
-                print("Epoch {0}: , {1:.2f}%".format(j+1,  test2))
+                print("Epoch {0}: {1:.2f}\%".format(j+1, test2))
                 return [j+1, test2]
-
-    def update_mini_batch(self, mini_batch, eta):
-        #Funkcja aktualizujaca wagi i biasy poprzez 
-        #zastosowanie metody gradientowej i wstecznej 
-        #propagacji dla danego podzioru. Jako parametry 
-        #przyjmuje: liste krotek (x, y) oraz wspolczynik uczenia
-        #generowanie macierzy zerowej dla gradientu biasow i wag
+    def __update_mini_batch(self, mini_batch, eta):
         nabla_b = [np.zeros(b.shape) for b in self.biases]
         nabla_w = [np.zeros(w.shape) for w in self.weights]
-        
         for x, y in mini_batch:
-            #dla kazdej pary (x, y) oblicz przyrost gradientu
-            delta_nabla_b, delta_nabla_w = self.backprop(x, y)
-            #oblicz nowy gradient
+            delta_nabla_b, delta_nabla_w = self.__backprop(x, y)
             nabla_b = [nb+dnb for nb, dnb in zip(nabla_b, delta_nabla_b)]
             nabla_w = [nw+dnw for nw, dnw in zip(nabla_w, delta_nabla_w)]
-        #obliczanie nowych wag i biasow
         self.weights = [w-(eta/2)*nw
                         for w, nw in zip(self.weights, nabla_w)]
         self.biases = [b-(eta/2)*nb
                        for b, nb in zip(self.biases, nabla_b)]
 
-    def backprop(self, x, y):
-        """Zwraca krotke (nabla_b, nabla_w) rezprezentujaca 
-        gradient funkcji kosztu"""
+    def __backprop(self, x, y):
         nabla_b = [np.zeros(b.shape) for b in self.biases]
         nabla_w = [np.zeros(w.shape) for w in self.weights]
         # feedforward
-        #
         activation = x
-        #lista zawierajaca aktywacje wszystkich neuronow, 
-        #warstwa po warstwie
-        activations = [x]
-        # lista pobudzen, warstwa po warstwie
-        zs = []
-        #obliczanie aktywacji i pobudzen
+        activations = [x] # list to store all the activations, layer by layer
+        zs = [] # list to store all the z vectors, layer by layer
         for b, w in zip(self.biases, self.weights):
             z = np.dot(w, activation)+b
             zs.append(z)
-            activation = sigmoid(z)
+            activation = self.__sigmoid(z)
             activations.append(activation)
-        #obliczanie przyrostu gradientu dla warstwy wyjsciowej
-        delta = self.cost_derivative(activations[-1], y) * \
-            sigmoid_prime(zs[-1])
+        # backward pass
+        delta = self.__cost_derivative(activations[-1], y) * self.__sigmoid_prime(zs[-1])
         nabla_b[-1] = delta
         nabla_w[-1] = np.dot(delta, activations[-2].transpose())
-        #obliczanie przyrostu gradientu dla warstwy ukrytej i 
-        #wejsciowej
         for l in range(2, self.num_layers):
             z = zs[-l]
-            sp = sigmoid_prime(z)
+            sp = self.__sigmoid_prime(z)
             delta = np.dot(self.weights[-l+1].transpose(), delta) * sp
             nabla_b[-l] = delta
             nabla_w[-l] = np.dot(delta, activations[-l-1].transpose())
         return (nabla_b, nabla_w)
 
-    def evaluate(self, test_data):
-        """Zwraca liczbe poprawnie dopasowanych rekordow 
-        treningowych. Jako argument przyjmuje liste krotek (x,y) 
-        z danymi testowymi"""
-        """tworzy liste krotek gdzie x - indeks neuronu ktory 
-        posiada najwieksza wartosc, y - oczekiwana klasa"""
-        test_results = [(np.argmax(self.feedforward(x)), np.argmax(y))
-                        for (x, y) in test_data]
-        #suma poprawnych dopasowan
+    def __evaluate(self, test_data):
+        test_results = [(np.argmax(self.__feedforward(x)), np.argmax(y)) for (x, y) in test_data]
         return sum(int(x == y) for (x, y) in test_results)
 
-    def cost_derivative(self, output_activations, y):
-        #Funkcja zwracajaca wektor 
-        #(atywacja neuronow - oczekiwane wyniki)
+    def __cost_derivative(self, output_activations, y):
         return (output_activations-y)
 
-def sigmoid(z):
-    """Funkcja sigmoidalna"""
-    return 1.0/(1.0+np.exp(-z))
+    def __sigmoid(self,z):
+        return 1.0/(1.0+np.exp(-z))
 
-def sigmoid_prime(z):
-    """Pochodna z funkcji sigmoidalnej"""
-    return sigmoid(z)*(1-sigmoid(z))
+    def __sigmoid_prime(self,z):
+        return self.__sigmoid(z)*(1-self.__sigmoid(z))
+
 
 \end{lstlisting}
 \clearpage
@@ -468,9 +402,9 @@ Celem eksperymentu było znalezienie takiej kombinacji parametrów S1 oraz S2, d
 \begin{center}
 \begin{tabular}{|c|c|}
 \hline
-S1 (neurony warstwy I) & $[1, 20]$\\
+S1 (neurony warstwy I) & $[1, 25]$\\
 \hline
-S2 (neurony warstwy II) & $[1, 20]$\\
+S2 (neurony warstwy II) & $[1, 25]$\\
 \hline
 Learning rate & 0.1\\
 \hline
@@ -495,62 +429,51 @@ import network
 from data import loadData
 import pandas as pd
 import numpy as np
+
 trainData, testData = loadData()
-s1_vec = np.arange(1,20.01,1,dtype=int)
-s2_vec = np.arange(1,20.01,1,dtype=int)
+s1_vec = np.arange(1,25.01,1,dtype=int)
+s2_vec = np.arange(1,25.01,1,dtype=int)
 results = []
 for s1 in s1_vec:
-    for s2 in s2_vec:
-        result = [s1,s2]
-        net = network.Network([9, s1, s2,  6])
-        print('S1: {0}, S2: {1}'.format(s1,s2))
-        result.extend(net.SGD(trainData,2000,len(trainData),0.1,testData,0.25,1.05,0.7))
-        results.append(result)
+	for s2 in s2_vec:
+		result = [s1,s2]
+		net = network.Network([13, s1, s2, 3])
+		print('S1: {0}, S2: {1}'.format(s1,s2))
+		result.extend(net.train(trainData,testData))
+		results.append(result)
+
 results=pd.DataFrame(results)
-results.to_csv('new_results_2.csv',index=None,header=None)
+results.to_csv('S1_S2_1.csv',index=None,header=None)
+
 
 \end{lstlisting}
 
 \subsubsection{Badania dla 1000 epok}
-Przebadane zostały liczby neuronów w obu warstwach z przedziału od 1 do 20  z krokiem co 1 neuron. Liczba epok wynosiła 1000. Pozostałe parametry ustawiono zgodnie z tabelą \ref{tab2}
+Celem pierwszego eksperymentu było znalezienie odpowiedniej liczby neuronów w warstwie pierwszej i drugiej. Przebadano liczby neuronów w obu warstwach z zakresu od 1 do 25 z krokiem co jeden neuron. Liczba epok została ustawiona na 1000. Pozostałe parametry ustawiono zgodnie z tabelą \ref{tab2}
+Przebadane zostały liczby neuronów w obu warstwach z przedziału od 1 do 20  z krokiem co 1 neuron. Liczba epok wynosiła 1000. 
 
 \begin{figure}[H]
-\label{s1000epok1}
+\label{eks1_klas}
 \centering
-\includegraphics[width=12cm]{s1000epok1.png}
+\includegraphics[width=13cm]{eks1_klas.png}
 \caption{Wykres wypływu S1, S2 na poprawność klasyfikacji (maks. 1000 epok)}
 \end{figure}
 
-\begin{figure}[H]
-\label{s1000epok2}
-\centering
-\includegraphics[width=12cm]{s1000epok2.png}
-\caption{Wykres wypływu S1, S2 na poprawność klasyfikacji (maks. 1000 epok)}
-\end{figure}
-
-W wyniku tego eksperymentu okazało się, że dla tych parametrów sieć nie przekracza skuteczności równej $77,27\%$. Skuteczność tę osiąga dla 19 neuronów na warstwie I i 19 neuronów na warstwie II oraz dla 16 neuronów na warstwie I i 11 neuronów na warstwie II.
-
-\subsubsection{Badania dla 2000 epok}
-Ze względu na niezadowalające wyniki eksperymentu dla maksmalnej liczby epok równej 1000, liczba ta została zwiększona dwukrotnie. Dalsze eksperymenty przeprowadzono więc dla 2000 epok. Pozostałe parametry pozostały bez zmian.
+Na wykresie \ref{eks1_klas} można zauważyć, że większość kombinacji liczby neuronów S1 i S2 proces uczenia zakończył się przed osiągnięciem maksymalnej ilości epok, co świadczy o tym, że przedstawiony zbiór danych jest niewymagający. W celu poprawnej analizy danych wykreślono powierzchnię funkcji minimalnej ilości epok potrzebnych do osiągnięcia zakładanego błędu uczenia SSE.
 
 \begin{figure}[H]
-\label{s2000epok1}
+\label{eks1_epochs}
 \centering
-\includegraphics[width=12cm]{s2000epok1.png}
-\caption{Wykres wypływu S1, S2 na poprawność klasyfikacji (maks. 2000 epok)}
+\includegraphics[width=13cm]{eks1_epochs.png}
+\caption{Wykres wypływu S1, S2 na ilość epok potrzebnych do osiągnięcia zakładanego SSE}
 \end{figure}
 
-\begin{figure}[H]
-\label{s2000epok2}
-\centering
-\includegraphics[width=10cm]{s2000epok2.png}
-\caption{Wykres wypływu S1, S2 na poprawność klasyfikacji (maks. 2000 epok)}
-\end{figure}
+W wyniku tego eksperymentu okazało się, że dla większości kombinacji S1 i S2 sieć osiąga $100\%$ dokładności klasyfikacji. Skuteczność tą osiąga najszybciej dla kombinacji $<22,4>$, którą sieć osiągnęła po 145 epokach. Drugą parą jest kombinacja $<7,4>$, dla której zadaną skuteczność osiągnięto po 157 epokach.
 
-Sieć osiąga najlepszą skuteczność równą $81,82\%$ dla 17 neuronów na warstwie I i 7 neuronów na warstwie II oraz dla 17 neuronów na warstwie I i 15 neuronów na warstwie II. Został także przeprowadzony eksperyment dla maks. liczby epok równej 5000, jednak nie zmieniło to w żadnym stopniu skuteczności sieci.
+
 
 \subsection{Eksperyment 2 - badanie parametrów $lr_{inc}$ oraz $lr_{dec}$}
-Na potrzeby eksperytmentu 2 przyjęto parametry uczenia określone w tabeli \ref{tab2}, zmianie poddane zostały parametry:
+Celem drugiego eksperymentu było wyznaczenie optymalnych wartości parametrów $lr_{inc}$ oraz $lr_{dec}$ odpowiedzialnych za modyfikację współczynnika uczenia na podstawie bieżącego błędu SSE. Na potrzeby eksperymentu przyjęto parametry uczenia określone w tabeli \ref{tab2}, zmianie poddane zostały parametry:
 \begin{itemize}
 \item learning rate accelerate - w przedziale $< 0.9; 1.9 >$, ze skokiem co 0.05
 \item learning rate decelerate - w przedziale $< 0.1; 1.1 >$, ze skokiem co 0.05
@@ -563,88 +486,74 @@ import network
 from data import loadData
 import pandas as pd
 import numpy as np
-from tabulate import tabulate
 trainData, testData = loadData()
 lr_inc_vec=np.arange(0.9,1.91,0.05)
 lr_dec_vec=np.arange(0.1,1.11,0.05)
 results = []
 name=sys.argv[3]
-name='result'+name+'.csv'
+name='inc_dec__'+name+'.csv'
 for lr_inc in lr_inc_vec:
-    for lr_dec in lr_dec_vec:
-        result = [lr_inc,lr_dec]
-        net = network.Network([9, int(sys.argv[1]), int(sys.argv[2]), 6])
-        result.extend(net.SGD(trainData,2000,len(trainData),0.1,testData,0.25,lr_inc,lr_dec))
-        results.append(result)
+	for lr_dec in lr_dec_vec:
+		result = [lr_inc,lr_dec]
+		net = network.Network([13, int(sys.argv[1]), int(sys.argv[2]), 3])
+		result.extend(net.train(trainData,testData,inc=lr_inc,dec=lr_dec))
+		results.append(result)
 
 results=pd.DataFrame(results)
 results.to_csv(name,index=None,header=None)
 
+
 \end{lstlisting}
 
-\newpage
 
-\subsubsection{Badania dla $S1=17$, $S2=7$}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=12cm]{eks2-17-7-1.png}
-\caption{Zależność poprawności klasyfikacji od $lr_{inc}$ oraz $lr_{dec}$ dla $S1=17$, $S2=7$}
-\label{eks2-17-7-1}
-\end{figure}
+\subsubsection{Badania dla $S1=22$, $S2=4$}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=12cm]{eks2-17-7-2.png}
-\caption{Zależność poprawności klasyfikacji od $lr_{inc}$ oraz $lr_{dec}$ dla $S1=17$, $S2=7$}
-\label{eks2-17-7-2}
+\includegraphics[width=13cm]{eks2_1.png}
+\caption{Zależność poprawności klasyfikacji od $lr_{inc}$ oraz $lr_{dec}$ dla $S1=22$, $S2=4$}
+\label{eks2_1}
 \end{figure}
 
-Rysunki \ref{eks2-17-7-1}, oraz \ref{eks2-17-7-2}, przedstawiają powierzchnię funkcji procentowej wartości poprawności klasyfikacji w zależności od
-wartości parametru learning rate accelerate oraz learning rate decelerate. Dla S1= 17, S2 = 7 największą poprawność uczenia osiągnięto dla wartości z przedziału $lr_{inc}  = [1.0; 1.1]$, oraz $lr_{dec} = [0.2; 0.6]$ - $81,81\%$. Natomiast najgorszy wynik uzyskano gdy $lr_{inc}$ wynosił 0.9 lub $lr_{dec}$ był większy niż 1.
 
-\subsubsection{Badania dla $S1=17$, $S2=15$}
+Rysunek \ref{eks2_1} przedstawia powierzchnię funkcji ilości epok potrzebnej do osiągnięcia zamierzonego błędu w zależności od wartości parametru learning rate accelerate oraz learning rate decelerate. Dla S1= 22, S2 = 4 największą poprawność uczenia osiągnięto dla wartości $lr_{inc}  =  1.6$, oraz $lr_{dec} = 0.2$. Natomiast najgorszy wynik uzyskano gdy $lr_{inc}$ wynosił 0.9 lub $lr_{dec}$ był większy niż 1.
+
+\subsubsection{Badania dla $S1=7$, $S2=4$}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=12cm]{eks2-17-15-1.png}
-\caption{Zależność poprawności klasyfikacji od $lr_{inc}$ oraz $lr_{dec}$ dla $S1=17$, $S2=15$}
-\label{eks2-17-15-1}
+\includegraphics[width=13cm]{eks2_2.png}
+\caption{Zależność poprawności klasyfikacji od $lr_{inc}$ oraz $lr_{dec}$ dla $S1=7$, $S2=4$}
+\label{eks2_2}
 \end{figure}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=12cm]{eks2-17-15-2.png}
-\caption{Zależność poprawności klasyfikacji od $lr_{inc}$ oraz $lr_{dec}$ dla S1=17, S2=15}
-\label{eks2-17-15-2}
-\end{figure}
+Rysunek \ref{eks2_2} przedstawia powierzchnię funkcji ilości epok potrzebnej do osiągnięcia zamierzonego błędu w zależności od wartości parametru learning rate accelerate oraz learning rate decelerate. Dla S1= 7, S2 = 4 największą poprawność uczenia osiągnięto dla wartości $lr_{inc}  =  1.55$, oraz $lr_{dec} = 0.15$. Natomiast najgorszy wynik uzyskano gdy $lr_{inc}$ wynosił 0.9 lub $lr_{dec}$ był większy niż 1.
 
-Na rysunkach \ref{eks2-17-15-1}, oraz \ref{eks2-17-15-2} można zauważyć, że dla S1= 17, S2 = 15 największą poprawność uczenia osiągnięto dla wartości $lr_{inc}  = [1.20; 1.25]$, $lr_{dec} = [0.65; 0.8]$ oraz $lr_{inc}  = 1.4$, $lr_{dec} = 0.9$. Natomiast najgorsze wyniki uzyskano gdy $lr_{inc}$ wynosił 0.9 lub $lr_{dec}$ był większy niż 1.
-
-Porównując przedstawione wyżej wykresy i wartości, można wywnioskować, że sieć w parametrach S1= 17, S2 = 7 jest lepiej uwarunkowana dla badanego zestawu danych. 
+Porównując przedstawione wyżej wykresy i wartości, można wywnioskować, że sieć w parametrach S1= 7, S2 = 4 jest lepiej uwarunkowana dla badanego zestawu danych. 
 
 
 \subsection{Eksperyment 3 - badanie parametru er}
-W kolejnym z eksperymentów zbadano wpływ parametru $er$ na procentową wartość nauczenia sieci. Domyślnie parametr ten wynosił $1.04$. Na potrzeby eksperymentu zmieniano wartość $er$ w zakresie $[1.01; 1.07]$. Badania przeprowadzono dla maksymalnej liczby 2000 epok,  $lr_{inc}  = 1.05$, $lr_{dec} = 0.7$ oraz parametrów S1 = 17, S2 = 7. Listing \ref{eks3} przedstawia kod, którego użyto do eksperymentu.
+Celem trzeciego eksperymentu było zbadanie wpływu współczynnika maksymalnego przyrostu błędu $er$ na ilość potrzebnych epok do osiągnięcia zakładanej wartości błędu SSE. Domyślnie parametr ten wynosił $1.04$. Na potrzeby eksperymentu zmieniano wartość $er$ w zakresie $[1.01; 1.09]$. Badania przeprowadzono dla maksymalnej liczby 1000 epok, $lr_{inc}  = 1.55$, $lr_{dec} = 0.15$ oraz $lr_{inc}  = 1.6$, $lr_{dec} = 0.3$ dla parametrów S1 = 7, S2 = 4. Listing \ref{eks3} przedstawia kod, którego użyto do eksperymentu.
 
 \begin{lstlisting}[language=Python,caption=Algorytm realizujący eksperyment 3,label={eks3}]
+import sys
 import network
 from data import loadData
 import pandas as pd
 import numpy as np
-from tabulate import tabulate
 trainData, testData = loadData()
-er_ratio_vec=np.arange(1.01,1.071,0.01)
+err_inc_vec=np.arange(1.01,1.091,0.01)
 results = []
-for er in er_ratio_vec:
-    result = [er]
-    net = network.Network([9, 17, 7,  6],err=er)
-    print('Er: {0}'.format(er))
-    result.extend(net.SGD(trainData,2000,len(trainData),0.1,testData,0.25,1.05,0.7))
-    results.append(result)
+name=sys.argv[3]
+name='err_inc'+name+'.csv'
+for err in err_inc_vec:
+	result = [err]
+	net = network.Network([13, 7, 4, 3])
+	result.extend(net.train(trainData,testData,inc=float(sys.argv[1]),dec=float(sys.argv[2]),err_inc=err))
+	results.append(result)
 
 results=pd.DataFrame(results)
-results.to_csv('new_resulty_1.csv',index=None,header=None)
+results.to_csv(name,index=None,header=None)
 
 \end{lstlisting}
 
@@ -655,7 +564,44 @@ results.to_csv('new_resulty_1.csv',index=None,header=None)
 \label{ryseks3}
 \end{figure}
 
-Rysunek \ref{ryseks3} obrazuje wyniki wykonanego badania. Warstość domyślna parametru $er = 1.04$ jest dobrze dobrana, ponieważ daje najwyższy wynik nauczenia sieci. 
+Rysunek \ref{ryseks3} obrazuje wyniki wykonanego badania.
+Na jego podstawie można ocenić, że dla pierwszej kombinacji optymalną wartością parametru $er$ jest wartość z przedziału $<1.03;1.06>$, natomiast dla drugiej pary jest to przedział $<1.04;1.05>$.
+
+
+\subsection{Eksperyment 4 - badanie wielkości podzbiorów}
+Celem czwartego eksperymentu było wyznaczenie optymalnej wielkości mini-batcha, dla którego obliczany jest gradient. Jako parametry przyjęto najoptymalniejsze z poprzednich eksperymentów: $S1 = 7; S2=4; lr_{inc}=1.55; lr_{dec}=0.15; err_inc=1.04$. Rozmiar mini-batchy został określony według następującego wzoru $len(trainingData)\over{n}$, gdzie $n$ należy do przedziału $<1; 50>$ ze skokiem co 1.
+
+\begin{lstlisting}[language=Python,caption=Algorytm realizujący eksperyment 3,label={eks4}]
+	import network
+	from data import loadData
+	import pandas as pd
+	import numpy as np
+	from tabulate import tabulate
+	trainData, testData = loadData()
+	results = []
+	n=len(trainData)
+	size_vec = [n//x for x in range(1,50)]
+	for size in size_vec:
+	result = [size]
+	net = network.Network([13, 7, 4, 3])
+	result.extend(net.train(trainData,testData,inc=1.55,dec=0.15,err_inc=1.04,mini_batch_size=size))
+	results.append(result)
+	
+	results=pd.DataFrame(results)
+	results.to_csv('batch.csv',index=None,header=None)
+	
+	
+\end{lstlisting}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=15cm]{eks4.png}
+	\caption{Wykres wpływu parametru $mini_batch_size$ na poprawność klasyfikacji}
+	\label{ryseks4}
+\end{figure}
+
+Z wykresu \ref{ryseks4} można zauważyć, że prędkość uczenia wzrasta wraz ze spadkiem rozmiaru pojedynczego podzbioru. Najbardziej optymalną wartością tego parametru jest wartość 3, dla której sieć potrzebuje tylko 12 epok do osiągnięcia zamierzonej wartości SSE. 
+
 
 \clearpage
 \section{Podsumowanie i wnioski końcowe}

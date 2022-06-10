@@ -17,15 +17,13 @@ class Network(object):
             a = self.__sigmoid(np.dot(w, a)+b)
         return a
 
-    def sse(self,_test_data):
+    def __sse(self,_test_data):
         error=[pow(np.linalg.norm(self.__feedforward(x)-y),2) for (x,y) in _test_data]
         return 0.5*sum(error)    
-    def mse(self,_test_data):
-        error=[pow(np.linalg.norm(self.__feedforward(x)-y),2) for (x,y) in _test_data]
-        return 1/len(_test_data)*sum(error)
  
     def train(self, training_data, test_data,epochs=1000, eta=0.1,
-            error_goal=0.25,inc=1.05,dec=0.7,mini_batch_size=0):
+            error_goal=0.25,inc=1.05,dec=0.7,mini_batch_size=0,err_inc=1.04):
+        self.max_perf_inc=err_inc
         if mini_batch_size==0: mini_batch_size=len(training_data)
         n_test = len(test_data)
         n = len(training_data)
@@ -33,14 +31,14 @@ class Network(object):
             random.shuffle(training_data)
             mini_batches = [training_data[k:k+mini_batch_size]
                     for k in range(0, n, mini_batch_size)]
-            old_error=self.sse(test_data)
+            old_error=self.__sse(test_data)
             backup_weights = self.weights.copy()
             backup_biases = self.biases.copy()
             for mini_batch in mini_batches:
                 self.__update_mini_batch(mini_batch, eta)
-            new_error=self.sse(test_data)
+            new_error=self.__sse(test_data)
             if new_error < error_goal:
-                test=self.evaluate(test_data)
+                test=self.__evaluate(test_data)
                 test2=test/n_test*100
                 print("Epoch {0}: {1:.2f}%".format(j+1, test2))
                 return [j+1, test2]
@@ -51,7 +49,7 @@ class Network(object):
                 self.biases = backup_biases
                 eta *= dec
             if j==epochs-1:
-                test=self.evaluate(test_data)
+                test=self.__evaluate(test_data)
                 test2=test/n_test*100
                 print("Epoch {0}: {1:.2f}%".format(j+1, test2))
                 return [j+1, test2]
@@ -105,7 +103,7 @@ class Network(object):
             nabla_w[-l] = np.dot(delta, activations[-l-1].transpose())
         return (nabla_b, nabla_w)
 
-    def evaluate(self, test_data):
+    def __evaluate(self, test_data):
         test_results = [(np.argmax(self.__feedforward(x)), np.argmax(y))
                         for (x, y) in test_data]
         return sum(int(x == y) for (x, y) in test_results)
