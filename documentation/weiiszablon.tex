@@ -274,6 +274,8 @@ Na potrzeby realizacji projektu zaimplementowano w języku Python program pozwal
 
 Do implementacji wykorzystano język programowania Python 3.10.5, który jest językiem z natury wolnym, dlatego do obliczeń wykorzystano moduł \textit{numpy}. Moduł ten napisany jest w C, dzięki czemu obliczenia na macierzach będą wykonywane o wiele szybciej niż w zwykłym pythonie. Do kroswalidacji wykorzystano moduł \textit{sklearn}.
 
+Kod źródłowy znajduje się na repozytorium GitHub \cite{github}
+
 %Python jest z natury językiem wolnym. Dzieje się tak, ponieważ należy do grupy języków interpretowanych. Z racji tego, implementacja sieci w samym Pythonie byłaby nieefektywna. W związku z tym do obliczeń wykorzystano moduł \textit{numpy}. Biblioteka ta została napisana i skompilowana w języku C, dlatego wykonywanie obliczeń będzie znacznie przyspieszone. Do kroswalidacji użyto modułu \textit{sklearn}.
 
 Program oferuje możliwość wyboru techniki aktualizacji wag:
@@ -406,6 +408,8 @@ S1 (neurony warstwy I) & $[1, 25]$\\
 \hline
 S2 (neurony warstwy II) & $[1, 25]$\\
 \hline
+Epochs & $1000$\\
+\hline
 Learning rate & 0.1\\
 \hline
 Learning rate accelerate & 1.05\\
@@ -448,19 +452,18 @@ results.to_csv('S1_S2_1.csv',index=None,header=None)
 
 \end{lstlisting}
 
-\subsubsection{Badania dla 1000 epok}
-Celem pierwszego eksperymentu było znalezienie odpowiedniej liczby neuronów w warstwie pierwszej i drugiej. Przebadano liczby neuronów w obu warstwach z zakresu od 1 do 25 z krokiem co jeden neuron. Liczba epok została ustawiona na 1000. Pozostałe parametry ustawiono zgodnie z tabelą \ref{tab2}
-Przebadane zostały liczby neuronów w obu warstwach z przedziału od 1 do 20  z krokiem co 1 neuron. Liczba epok wynosiła 1000. 
+%Celem pierwszego eksperymentu było znalezienie odpowiedniej liczby neuronów w warstwie pierwszej i drugiej. Przebadano liczby neuronów w obu warstwach z zakresu od 1 do 25 z krokiem co jeden neuron. Liczba epok została ustawiona na 1000. Pozostałe parametry ustawiono zgodnie z tabelą \ref{tab2}
+%Przebadane zostały liczby neuronów w obu warstwach z przedziału od 1 do 20  z krokiem co 1 neuron. Liczba epok wynosiła 1000. 
 
 \begin{figure}[H]
 \label{eks1_klas}
 \centering
 \includegraphics[width=13cm]{eks1_klas.png}
-\caption{Wykres wypływu S1, S2 na poprawność klasyfikacji (maks. 1000 epok)}
+\caption{Wykres wypływu S1, S2 na poprawność klasyfikacji}
 \end{figure}
 
 Na wykresie \ref{eks1_klas} można zauważyć, że większość kombinacji liczby neuronów S1 i S2 proces uczenia zakończył się przed osiągnięciem maksymalnej ilości epok, co świadczy o tym, że przedstawiony zbiór danych jest niewymagający. W celu poprawnej analizy danych wykreślono powierzchnię funkcji minimalnej ilości epok potrzebnych do osiągnięcia zakładanego błędu uczenia SSE.
-
+\clearpage
 \begin{figure}[H]
 \label{eks1_epochs}
 \centering
@@ -596,7 +599,7 @@ Celem czwartego eksperymentu było wyznaczenie optymalnej wielkości mini-batcha
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=15cm]{eks4.png}
-	\caption{Wykres wpływu parametru $mini_batch_size$ na poprawność klasyfikacji}
+	\caption{Wykres wpływu parametru $mini\_batch\_size$ na poprawność klasyfikacji}
 	\label{ryseks4}
 \end{figure}
 
@@ -606,15 +609,15 @@ Z wykresu \ref{ryseks4} można zauważyć, że prędkość uczenia wzrasta wraz 
 \clearpage
 \section{Podsumowanie i wnioski końcowe}
 
-Cel projektu, tj. zrealizowanie sztucznej sieci neuronowej uczonej algorytmem wstecznej propagacji błędu z przyśpieszeniem metodą adaptacyjnego współczynnika uczenia (trainbpa) uczącej się diagnozowania choroby został zrealizowany. W tym celu wykorzystano własną implementację sieci neuronowej napisanej w jęyku Python na podstawie książki Michaela Nielsena \cite{nielsen}. 
+Cel projektu, tj. zrealizowanie sztucznej sieci neuronowej uczonej algorytmem wstecznej propagacji błędu z przyśpieszeniem metodą adaptacyjnego współczynnika uczenia (trainbpa) uczącej się diagnozowania choroby został zrealizowany. Użyto w tym celu własnej implementacji sieci neuronowej napisanej w jęyku Python na podstawie książki Michaela Nielsena \cite{nielsen}. 
 
-Zadany zbiór okazał się być zbiorem trudnym do nauczenia. Procentowa dokładność klasyfikacji nie przekraczała nigdy $81,82\%$. 
+Zadany zbiór okazał się być zbiorem niewymagającym. Dla znacznej większości kombinacji parametrów S1 oraz S2 sieć osiągała $100\%$ poprawność klasyfikacji. 
 
-Eksperymenty pozwoliły na określenie optymalnych wartości parametrów, dla których sieć osiąga najlepsze wyniki. 
+Eksperymenty pozwoliły na określenie optymalnych wartości parametrów umożliwiających jak najszybsze uczenie się sieci. 
 
-Pierwszy eksperyment polegał na dostosowaniu ilości neuronów w warstwie I i II. Wyniki eksperymentu nie były zadowalające, najlepszy wynik osiągnięty przez sieć wynosił $81,82\%$ i został uzyskany dla maksymanej liczby epok równej 2000 oraz parametrów $S1=17$, $S2=7$ i $S1=17$, $S2=15$. 
+Pierwszy eksperyment polegał na dostosowaniu ilości neuronów w warstwie I i II. Minimalną ilość epok potrzebnych do nauczenia sieci osiągnięto dla zestawu $\{22,4\}$ oraz $\{7,4\}$. 
 
-Celem drugiego eksperymentu było wyznaczenie optymalnych wartości parametrów $lr_{inc}$ oraz $lr_{dec}$. Badanie to przeprowadzono dla najlepszych wyników otrzymanych z eksperymentu 1. Okazało się, iż istnieje wiele wartości badanych parametrów, dla których sieć uczy się dobrze. Na podstawie uzyskanych wykresów można także wywnioskować, że sieć jest lepiej uwarunkowana dla $S1 = 17$ oraz $S2 = 7$.
+Celem drugiego eksperymentu było wyznaczenie optymalnych wartości parametrów $lr_{inc}$ oraz $lr_{dec}$. Badanie to przeprowadzono dla najlepszych wyników otrzymanych z eksperymentu 1. Na podstawie uzyskanych wykresów można także wywnioskować, że sieć jest lepiej uwarunkowana dla $S1 = 7$ oraz $S2 = 4$.
 
 Trzeci, ostatni eksperyment przeprowadzono w celu wyznaczenia najbardziej optymalnego parametru $er$. Obserwując wynik badania, można zauważyć, że sieć osiąga najlepsze wartości dla $er = \{1.04, 1.06, 1.07\}$. 
 
@@ -635,6 +638,7 @@ http://materialy.prz-rzeszow.pl/pracownik/pliki/34/sztuczna-inteligencja-cw8-sie
 http://materialy.prz-rzeszow.pl/pracownik/pliki/34/sztuczna-inteligencja-cw9-siec-wielowarstw.pdf [Dostęp 09.06.2022 r.]
 \bibitem{mamczur}https://miroslawmamczur.pl/czym-jest-i-jak-sie-uczy-sztuczna-siec-neuronowa/ [Dostęp 21.05.2022 r.]
 \bibitem{leksykon} R. Tadeusiewicz, M. Szaleniec „Leksykon sieci neuronowych”, Wrocław 2015
+\bibitem{github} Repozytorium z własną implementacją sieci neuronowej\\ https://github.com/saimon833/ai\_project [Dostęp 10.06.2022 r.]
 
 
 \end{thebibliography}
