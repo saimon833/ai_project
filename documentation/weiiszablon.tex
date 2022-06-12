@@ -31,10 +31,10 @@ Głównym celem projektu było zaprojektowanie oraz implementacja sieci neuronow
 \begin{itemize}
 \item S1 - liczba neuronów w pierwszej warstwie sieci
 \item S2 - liczba neuronów w drugiej warstwie sieci
-\item lr - współczynnik uczenia sieci
 \item er - współczynnik maksymalnego dopuszczalnego przyrostu błędu
 \item lr\textsubscript{dec} - modyfikator współczynnika uczenia w przypadku przekroczeniu maksymalnego dopuszczalnego przyrostu błędu
 \item lr\textsubscript{inc} - modyfikator współczynnika uczenia w przypadku spadku błędu
+\item mini\_batch\_size - rozmiar podzbiorów uczących
 \end{itemize}
 
 Opis problemu oraz wykorzystane w projekcie dane zostały przedstawione na stronie \cite{dane}
@@ -45,9 +45,9 @@ Opis problemu oraz wykorzystane w projekcie dane zostały przedstawione na stron
 Dane pobrane z wspomnianej powyżej strony zawierały 178 wierszy danych, z których to każdy posiadał 14 atrybutów (w tym atrybut klasowy). Dane
 są wynikiem analizy chemicznej win uprawianych w tym samym regionie Włoch,
 ale pochodzących z trzech różnych odmian. Badany zestaw danych nie zawiera
-niekompletnych rekordów, oraz wartości niepoprawnych. W zbiorze danych pierwszy
+niekompletnych rekordów oraz wartości niepoprawnych. W zbiorze danych pierwszy
 atrybut określa rodzaj wina - opisany liczbą całkowitą {1, 2, 3}, natomiast pozostałe
-13 atrybutów to
+13 atrybutów to:
 \begin{itemize}
 \item (Alcohol) - Procentowa zawartość alkoholu (wartość ciągła)
 \item (Malic acid) - Procentowa zawartość kwasu jabłkowego (wartość ciągła)
@@ -72,7 +72,7 @@ f(x) = \frac{x - \min{(x)}}{\max{(x)} - \min{(x)}}
 \end{equation}
 
 
-Dzięki takiej normalizacji, możliwe jest dynamiczne normalizowanie danych wejściowych do zadanego zakresu. W przypadku tego projektu został zastosowany przedział normalizacyjny $ [0, 1]$.\\
+Dzięki takiej normalizacji możliwe jest dynamiczne normalizowanie danych wejściowych do zadanego zakresu. W przypadku tego projektu został zastosowany przedział normalizacyjny $ [0, 1]$.\\
 
 \begin{lstlisting}[language=Python,caption=Algorytm normalizacji,label={Kod1}]
     for column in norm_data.columns:
@@ -88,14 +88,13 @@ Numery klas, stanowiące dane wyjściowe, zostały natomiast przekształcone prz
 \clearpage
 \section{Zagadnienia teoretyczne}
 \subsection{Model sztucznego neuronu}
-Sieć neuronową  tworzą pojedyncze neurony, które ułożone są w poszczególnych warstwach sieci. Neuron jest jednostką przetwarzającą informacje otrzymane na wejciu, oraz zwraca wynik przetwarzania w postaci wartości wyjściowej. 
-
+Sieć neuronową  tworzą pojedyncze neurony, które ułożone są w poszczególnych warstwach sieci. Neuron jest jednostką przetwarzającą informacje otrzymane na wejściu oraz zwraca wynik przetwarzania w postaci wartości wyjściowej. 
 
 Początkowo neuron miał co najmniej jedno wejście binarne i tylko jedno binarne wyjście. Wyjście było aktywowane, gdy osiągnięta została określona liczba wejść. W 1957 roku uczony Frank Rosenblatt zmodyfikował prosty sztuczny neuron binarny, tworząc w ten sposób perceptron, czyli jedną z najprostszych sieci neuronowych. Posiada on następującą charakterystykę \cite{mamczur}:
 \begin{itemize}
 \item Na wejściu i wyjściu mogą być dowolne liczby, nie tylko wartości binarne 
 \item Połączenia węzłów mają określoną wagę
-\item Wartość wyjściowa węzła składa się z dwóch części: sumy wartości z warstw poprzednich pomnożonej przez wagi oraz nałożonej na tą sumę funkcji aktywacji.
+\item Wartość wyjściowa węzła składa się z dwóch części: sumy wartości z warstw poprzednich pomnożonej przez wagi oraz nałożonej na tę sumę funkcji aktywacji.
 \end{itemize}
 
 Model neuronu został przedstawiony na rysunku \ref{neuron}.
@@ -106,12 +105,11 @@ Model neuronu został przedstawiony na rysunku \ref{neuron}.
 \includegraphics[width=14cm]{neuron.png}
 \caption{Model neuronu}
 \end{figure}
-
+\clearpage
 Ważona suma wejść wraz z przesunięciem nazywana jest łącznym pobudzeniem neuronu i określana wzorem:
 \begin{equation}\label{pobudzenie}
 z = \sum_{i=1}^{n}(x_i \cdot w_i) + b 
 \end{equation}
-
 Ogólny wzór na wartość wyjścia neuronu przedstawiono równaniem \ref{wyj-neu}
 
 \begin{equation}\label{wyj-neu}
@@ -122,7 +120,7 @@ gdzie:
 \item $y$ - wyjście neuronu
 \item $f$ - funkcja aktywacji
 \item $n$ - ilość wejść
-\item $x$ - wektor wejciowy
+\item $x$ - wektor wejściowy
 \item $w$ - wektor wag
 \item $b$  - bias
 \end{itemize}
@@ -148,7 +146,7 @@ gdzie parametr $\beta$ najczęściej jest z przedziału $[0, 1]$.
 
 \subsection{Sieć jednokierunkowa wielowarstwowa}
 
-Sztuczną sieć neuronowa uzyskuje się łącząc ze sobą warstwy neuronów. Neurony nie łączą się ze sobą w obrębie tej samej warstwy lub z pominięciem warstw między nimi. Przykładowy model sieci wielowarstwowej pokazano na rysunku \ref{wielo}.
+Sztuczną sieć neuronowa uzyskuje się, łącząc ze sobą warstwy neuronów. Neurony nie łączą się ze sobą w obrębie tej samej warstwy lub z pominięciem warstw między nimi. Przykładowy model sieci wielowarstwowej pokazano na rysunku \ref{wielo}.
 
 \begin{figure}[h]
 \label{wielo}
@@ -164,7 +162,7 @@ Sieć taka ma zwykle strukturę obejmującą:
 \item warstwę wyjściową (złożoną z neuronów sigmoidalnych lub liniowych)
 \end{itemize}
 
-Charakterystyczną cechą dla warstwy wejściowej jest to, że nie bierze ona udziału w procesie uczenia, jej zadaniem zadaniem jest przekazanie wektora wejściowego sieci do warstw ukrytych, lub bezpośrednio do warstwy wyjściowej (w przypadku modelu sieci jednowarstwowej). Ilość warstw w sieci oraz ilość neuronów w warstwie są ściśle uzależnione od specyfiki problemu przed jakim zosataje postawiona sieć neuronowa.
+ Ilość warstw w sieci oraz ilość neuronów w warstwie są ściśle uzależnione od specyfiki problemu, przed jakim zostaje postawiona sieć neuronowa.
 \newpage
 Każda warstwa sieci posiada:
 \begin{itemize}
@@ -191,7 +189,7 @@ y^{(3)} = f^{(3)}\left( w^{(3)} f^{(2)} \left( w^{(2)}f^{(1)} \left( w^{(1)}x + 
 
 \subsection{Algorytm wstecznej propagacji błędu}
 
-Algorytm wstecznej propagacji błędu, nazywany również algorytmem największego spadku gradientu jest algorytmem dominującym wśród metod uczenia sieci jednokierunkowych. Działanie algorytmu sprowadza się do wyznaczenia gradientu funkcji celu dla każdego z neuronów sieci. 
+Algorytm wstecznej propagacji błędu, nazywany również algorytmem największego spadku gradientu, jest algorytmem dominującym wśród metod uczenia sieci jednokierunkowych. Działanie algorytmu sprowadza się do wyznaczenia gradientu funkcji celu dla każdego z neuronów sieci. 
 
 Aby możliwe było zastosowanie algorytmu wstecznej propagacji błędu, wymagane jest, aby funkcje aktywacji neuronów były różniczkowalne. Pozwala to na wyznaczenie pochodnej błędu po danych wyjściowych. Dla każdej pary $(x, \hat{y})$ sieć popełnia błąd, który można zdefiniować następująco:
 
@@ -462,7 +460,7 @@ results.to_csv('S1_S2_1.csv',index=None,header=None)
 \caption{Wykres wypływu S1, S2 na poprawność klasyfikacji}
 \end{figure}
 
-Na wykresie \ref{eks1_klas} można zauważyć, że większość kombinacji liczby neuronów S1 i S2 proces uczenia zakończył się przed osiągnięciem maksymalnej ilości epok, co świadczy o tym, że przedstawiony zbiór danych jest niewymagający. W celu poprawnej analizy danych wykreślono powierzchnię funkcji minimalnej ilości epok potrzebnych do osiągnięcia zakładanego błędu uczenia SSE.
+Na wykresie \ref{eks1_klas} można zauważyć, że dla większości kombinacji liczby neuronów S1 i S2 proces uczenia zakończył się przed osiągnięciem maksymalnej ilości epok, co świadczy o tym, że przedstawiony zbiór danych jest niewymagający. W celu poprawnej analizy danych wykreślono powierzchnię funkcji minimalnej ilości epok potrzebnych do osiągnięcia zakładanego błędu uczenia SSE.
 \clearpage
 \begin{figure}[H]
 \label{eks1_epochs}
@@ -471,7 +469,7 @@ Na wykresie \ref{eks1_klas} można zauważyć, że większość kombinacji liczb
 \caption{Wykres wypływu S1, S2 na ilość epok potrzebnych do osiągnięcia zakładanego SSE}
 \end{figure}
 
-W wyniku tego eksperymentu okazało się, że dla większości kombinacji S1 i S2 sieć osiąga $100\%$ dokładności klasyfikacji. Skuteczność tą osiąga najszybciej dla kombinacji $<22,4>$, którą sieć osiągnęła po 145 epokach. Drugą parą jest kombinacja $<7,4>$, dla której zadaną skuteczność osiągnięto po 157 epokach.
+W wyniku tego eksperymentu okazało się, że dla większości kombinacji S1 i S2 sieć osiąga $100\%$ dokładności klasyfikacji. Skuteczność tę osiąga najszybciej dla kombinacji $\{22,4\}$, którą sieć osiągnęła po 145 epokach. Drugą parą jest kombinacja $\{7,4\}$, dla której zadaną skuteczność osiągnięto po 157 epokach.
 
 
 
@@ -532,7 +530,7 @@ Rysunek \ref{eks2_1} przedstawia powierzchnię funkcji ilości epok potrzebnej d
 
 Rysunek \ref{eks2_2} przedstawia powierzchnię funkcji ilości epok potrzebnej do osiągnięcia zamierzonego błędu w zależności od wartości parametru learning rate accelerate oraz learning rate decelerate. Dla S1= 7, S2 = 4 największą poprawność uczenia osiągnięto dla wartości $lr_{inc}  =  1.55$, oraz $lr_{dec} = 0.15$. Natomiast najgorszy wynik uzyskano gdy $lr_{inc}$ wynosił 0.9 lub $lr_{dec}$ był większy niż 1.
 
-Porównując przedstawione wyżej wykresy i wartości, można wywnioskować, że sieć w parametrach S1= 7, S2 = 4 jest lepiej uwarunkowana dla badanego zestawu danych. 
+Porównując przedstawione wyżej wykresy i wartości, można wywnioskować, że sieć o parametrach S1= 7, S2 = 4 jest lepiej uwarunkowana dla badanego zestawu danych. 
 
 
 \subsection{Eksperyment 3 - badanie parametru er}
@@ -570,10 +568,8 @@ results.to_csv(name,index=None,header=None)
 Rysunek \ref{ryseks3} obrazuje wyniki wykonanego badania.
 Na jego podstawie można ocenić, że dla pierwszej kombinacji optymalną wartością parametru $er$ jest wartość z przedziału $<1.03;1.06>$, natomiast dla drugiej pary jest to przedział $<1.04;1.05>$.
 
-
 \subsection{Eksperyment 4 - badanie wielkości podzbiorów}
-Celem czwartego eksperymentu było wyznaczenie optymalnej wielkości mini-batcha, dla którego obliczany jest gradient. Jako parametry przyjęto najoptymalniejsze z poprzednich eksperymentów: $S1 = 7; S2=4; lr_{inc}=1.55; lr_{dec}=0.15; err_inc=1.04$. Rozmiar mini-batchy został określony według następującego wzoru $len(trainingData)\over{n}$, gdzie $n$ należy do przedziału $<1; 50>$ ze skokiem co 1.
-
+Celem czwartego eksperymentu było wyznaczenie optymalnej wielkości parametru $mini\_batch\_size$, dla którego obliczany jest gradient. Jako parametry przyjęto najoptymalniejsze z poprzednich eksperymentów: $S1 = 7; S2=4; lr_{inc}=1.55; lr_{dec}=0.15; er=1.04$. Rozmiar mini-batchy został określony według następującego wzoru $len(trainingData)\over{n}$, gdzie $n$ należy do przedziału $<1; 50>$ ze skokiem co 1.
 \begin{lstlisting}[language=Python,caption=Algorytm realizujący eksperyment 3,label={eks4}]
 	import network
 	from data import loadData
@@ -609,7 +605,7 @@ Z wykresu \ref{ryseks4} można zauważyć, że prędkość uczenia wzrasta wraz 
 \clearpage
 \section{Podsumowanie i wnioski końcowe}
 
-Cel projektu, tj. zrealizowanie sztucznej sieci neuronowej uczonej algorytmem wstecznej propagacji błędu z przyśpieszeniem metodą adaptacyjnego współczynnika uczenia (trainbpa) uczącej się diagnozowania choroby został zrealizowany. Użyto w tym celu własnej implementacji sieci neuronowej napisanej w jęyku Python na podstawie książki Michaela Nielsena \cite{nielsen}. 
+Cel projektu, tj. zrealizowanie sztucznej sieci neuronowej uczonej algorytmem wstecznej propagacji błędu z przyśpieszeniem metodą adaptacyjnego współczynnika uczenia (trainbpa) uczącej się rozpoznawania rodzaju wina został zrealizowany. Użyto w tym celu własnej implementacji sieci neuronowej napisanej w jęyku Python na podstawie książki Michaela Nielsena \cite{nielsen}. 
 
 Zadany zbiór okazał się być zbiorem niewymagającym. Dla znacznej większości kombinacji parametrów S1 oraz S2 sieć osiągała $100\%$ poprawność klasyfikacji. 
 
@@ -619,9 +615,10 @@ Pierwszy eksperyment polegał na dostosowaniu ilości neuronów w warstwie I i I
 
 Celem drugiego eksperymentu było wyznaczenie optymalnych wartości parametrów $lr_{inc}$ oraz $lr_{dec}$. Badanie to przeprowadzono dla najlepszych wyników otrzymanych z eksperymentu 1. Na podstawie uzyskanych wykresów można także wywnioskować, że sieć jest lepiej uwarunkowana dla $S1 = 7$ oraz $S2 = 4$.
 
-Trzeci, ostatni eksperyment przeprowadzono w celu wyznaczenia najbardziej optymalnego parametru $er$. Obserwując wynik badania, można zauważyć, że sieć osiąga najlepsze wartości dla $er = \{1.04, 1.06, 1.07\}$. 
+Trzeci eksperyment przeprowadzono w celu wyznaczenia najbardziej optymalnego parametru $er$. Obserwując wynik badania, można zauważyć, że sieć osiąga najlepsze wartości dla $er = \{1.03, 1.04, 1.06, 1.07\}$ przy zastosowaniu $lr_{inc}=1.55$ oraz $lr_{dec}=0.15$. 
 
-Przeprowadzone eksperymenty pozwoliły na ustalenie optymalnych wartości parametrów, dla których sieć osiągała najlepszy wynik poprawności klasyfikacji. Badania te wykazały, że domyślne parametry z programu Matlab są najkorzystniejsze. 
+Czwarty, ostatni eksperyment został przeprowadzony w celu dobrania optymalnej wartości $mini\_batch\_size$ odpowiedzialnego za wielkość podzbiorów używanych do obliczania gradientu funkcji celu każdego z neuronów. Na jego podstawie można zauważyć, że zmniejszenie tego parametru pozwala na znaczące przyśpieszenie procesu uczenia. Dla wartości $3$ sieć osiągnęła zakładaną wartość SSE już po 12 epokach.
+
 
 \clearpage
 
